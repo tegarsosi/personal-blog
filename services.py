@@ -42,5 +42,4 @@ class BlogService:
             return None
 
         with open(file_path, "r") as f:
-            data = json.load(f)
-            return Article(**data)
+            return Article.model_validate_json(f.read())
