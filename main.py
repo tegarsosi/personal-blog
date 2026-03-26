@@ -16,3 +16,10 @@ def home_page(request: Request):
         name="home.html",
         context={"articles": articles}
     )
+
+@app.get("/admin/add", response_class=HTMLResponse)
+def add_article_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/add.html"
+    )

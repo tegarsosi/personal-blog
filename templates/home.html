@@ -1,7 +1,11 @@
-<h1>My Blog</h1>
-{% for article in articles %}
-    <div>
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.published_at }}</p>
-    </div>
-{% endfor %}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Latest Articles</h1>
+    {% for article in articles %}
+        <div>
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.published_at }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
