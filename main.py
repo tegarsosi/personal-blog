@@ -23,3 +23,12 @@ def add_article_page(request: Request):
         request=request,
         name="admin/add.html"
     )
+
+@app.post("/admin/add")
+def handle_add_article(
+    request: Request,
+    title: str = Form(...),
+    content: str = Form(...)
+):
+    service.create_article(title=title, content=content)
+    return RedirectResponse(url="/", status_code=303) # 303 is the standard redirect code for "Post-then-Redirect"
