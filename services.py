@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from models import Article
+from datetime import datetime
 
 class BlogService:
     def __init__(self, storage_dir: str = "storage"):
@@ -30,6 +31,7 @@ class BlogService:
         # Update the fields witht he new data from the form
         article.title = title
         article.content = content
+        article.updated_at = datetime.now() # refresh timestamp
 
         with open(file_path, "w") as f:
             f.write(article.model_dump_json())
@@ -45,11 +47,10 @@ class BlogService:
         articles = []
         for file in self.storage_path.glob("*.json"):
             with open(file, "r") as f:
-                data = json.load(f)
-                articles.append(Article(**data))
+                articles.append(Article.model_validate_json(f.read()))
 
         # Sort by date: Latest first
-        articles.sort(key=lambda x: x.published_at, reverse=True)
+        articles.sort(key=lambda x: x.updated_at, reverse=True)
         return articles
 
     def get_article_by_id(self, article_id: str) -> Article | None:
