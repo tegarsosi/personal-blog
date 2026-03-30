@@ -24,6 +24,25 @@ class BlogService:
             f.write(article.model_dump_json())
 
         return article
+
+    def edit_article(self, article_id: str, title: str, content: str) -> Article | None:
+        file_path = self.storage_path / f"{article_id}.json"
+
+        if not file_path.exists():
+            return None
+
+        # Load the old data so we keep the original ID and timestamp
+        with open(file_path, "r") as f:
+            article = Article.model_validate_json(f.read())
+
+        # Update the fields witht he new data from the form
+        article.title = title
+        article.content = content
+
+        with open(file_path, "w") as f:
+            f.write(article.model_dump_json())
+
+        return article
     
     def delete_article(self, article_id: str) -> None:
         file_path = self.storage_path / f"{article_id}.json"

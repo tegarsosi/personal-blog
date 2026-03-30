@@ -55,3 +55,25 @@ def admin_dashboard(request: Request):
 def handle_delete_article(article_id: str):
     service.delete_article(article_id=article_id)
     return RedirectResponse(url="/admin", status_code=303)
+
+@app.get("/admin/edit/{article_id}", response_class=HTMLResponse)
+def edit_article(request: Request, article_id: str):
+    article = service.get_article_by_id(article_id)
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/edit.html",
+        context={"article": article}
+    )
+
+@app.post("/admin/edit/{article_id}")
+def handle_edit_article(
+    article_id: str,
+    title: str = Form(...),
+    content: str = Form(...)
+):
+    service.edit_article(
+        article_id=article_id,
+        title=title,
+        content=content
+    )
+    return RedirectResponse(url="/admin", status_code=303)

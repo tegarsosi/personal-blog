@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Edit Article</h1>
+
+    <form action="/admin/edit/{{ article.id }}" method="post">
+        <div>
+            <label>Title</label>
+            <input type="text" id="title" name="title" value="{{ article.title }}" required>
+        </div>
+
+        <div>
+            <label>Content</label>
+            <textarea name="content" rows="10" value="{{ article.content }}" required>{{ article.content }}</textarea>
+        </div>
+
+        <button type="submit">Save changes</button>
+    </form>
+{% endblock %}
