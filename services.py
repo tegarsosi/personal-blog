@@ -24,6 +24,11 @@ class BlogService:
             f.write(article.model_dump_json())
 
         return article
+    
+    def delete_article(self, article_id: str) -> None:
+        file_path = self.storage_path / f"{article_id}.json"
+        if file_path.exists():
+            file_path.unlink() # This deletes the file
 
     def get_all_articles(self) -> list[Article]:
         articles = []

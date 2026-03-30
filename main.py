@@ -41,3 +41,17 @@ def get_article(request: Request, article_id: str):
         name="article.html",
         context={"article": article}
     )
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin_dashboard(request: Request):
+    articles = service.get_all_articles()
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/dashboard.html",
+        context={"articles": articles}
+    )
+
+@app.post("/admin/delete/{article_id}")
+def handle_delete_article(article_id: str):
+    service.delete_article(article_id=article_id)
+    return RedirectResponse(url="/admin", status_code=303)

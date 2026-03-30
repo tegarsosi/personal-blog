@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <a href="/admin/add">+ Add New Article</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+            <tr>
+                <td>{{ article.title }}</td>
+                <td>
+                    <a href="/admin/edit/{{ article.id }}">Edit</a> |
+
+                    <form action="/admin/delete/{{ article.id }}" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Are you sure?')" style="color: red; background: none; border: none; cursor: pointer; padding: 0;">
+                            Delete
+                        </button>
+
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
