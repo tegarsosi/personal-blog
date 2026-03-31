@@ -1,13 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Latest Articles</h1>
+<header class="mb-16">
+    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary mb-2 block">The Collection</span>
+    <h1 class="text-5xl font-extrabold tracking-tighter text-primary">Latest Articles</h1>
+</header>
+
+<div class="space-y-20">
     {% for article in articles %}
-        <div>
-            <h2>
-                <a href="/article/{{ article.id }}">{{ article.title }}</a>
-            </h2>
-            <p>Published: {{ article.created_at }} (Updated: {{ article.updated_at }})</p>
+    <article class="group relative">
+        <div class="grid grid-cols-12 gap-8 items-start">
+            <div class="col-span-12 md:col-span-2">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-secondary">
+                    {{ article.created_at.strftime('%b %d, %Y') }}
+                </span>
+            </div>
+
+            <div class="col-span-12 md:col-span-10 space-y-4">
+                <h2 class="text-3xl font-bold tracking-tight text-primary group-hover:underline">
+                    <a href="/article/{{ article.id }}">{{ article.title }}</a>
+                </h2>
+                
+                <p class="text-secondary leading-relaxed max-w-2xl">
+                    {{ article.content[:200] }}...
+                </p>
+
+                <div class="pt-4">
+                    <a href="/article/{{ article.id }}" class="text-xs font-bold uppercase tracking-tighter border-b-2 border-primary pb-1 hover:bg-primary hover:text-white transition-all">
+                        Read Narrative →
+                    </a>
+                </div>
+            </div>
         </div>
+    </article>
     {% endfor %}
+
+    {% if not articles %}
+    <div class="py-20 border-2 border-dashed border-outline-variant text-center">
+        <p class="text-secondary italic">The drafting room is currently empty.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
