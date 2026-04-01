@@ -1,19 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Create New Article</h1>
+<header class="flex justify-between items-end mb-12">
+    <div>
+        <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary block mb-2">New Entry</span>
+        <h1 class="text-4xl font-black tracking-tighter text-primary">Drafting Room</h1>
+    </div>
+    <a href="/admin" class="text-xs font-bold uppercase tracking-widest hover:underline">
+        ← Back to Dashboard
+    </a>
+</header>
 
-    <form action="/admin/add" method="post" class="admin-form">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" placeholder="Enter title..." required>
+<form action="/admin/add" method="post" class="grid grid-cols-12 gap-10 items-start">
+    <div class="col-span-12 lg:col-span-8 space-y-12">
+        
+        <div class="space-y-4">
+            <label for="title" class="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">
+                Title & Headline
+            </label>
+            <input type="text" id="title" name="title" required
+                   placeholder="Enter a bold title..."
+                   class="w-full bg-white border-2 border-primary p-4 text-xl font-bold tracking-tight focus:bg-surface-container-low focus:outline-none transition-colors rounded-none">
         </div>
 
-        <div class="form-group">
-            <label for="content">Content</label>
-            <textarea id="content" name="content" rows="10" placeholder="What article to write..." required></textarea>
+        <div class="space-y-4">
+            <label for="content" class="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">
+                The Narrative
+            </label>
+            <div class="border-2 border-primary bg-white">
+                <div class="flex gap-4 p-3 border-b-2 border-primary bg-surface-container-low">
+                   <span class="material-symbols-outlined text-sm opacity-50">format_bold</span>
+                   <span class="material-symbols-outlined text-sm opacity-50">format_italic</span>
+                   <span class="material-symbols-outlined text-sm opacity-50">link</span>
+                </div>
+                <textarea id="content" name="content" rows="18" required
+                          placeholder="Begin your story here..."
+                          class="w-full p-6 text-base leading-relaxed bg-transparent focus:outline-none resize-none border-none focus:ring-0"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-12 lg:col-span-4 space-y-10 lg:sticky lg:top-32">
+        <div class="p-6 border-2 border-primary bg-white scribble-texture">
+            <h3 class="text-xs font-bold uppercase tracking-widest mb-4">Publishing Info</h3>
+            <p class="text-[10px] text-secondary leading-tight italic">
+                Articles are stored as JSON locally. Once published, they will appear immediately on the public archive.
+            </p>
         </div>
 
-        <button type="submit" class="btn-publish">Publish Article</button>
-    </form>
+        <div class="pt-6">
+            <button type="submit" class="w-full bg-primary text-white py-5 px-8 font-extrabold tracking-tighter text-lg hover:opacity-90 transition-opacity flex justify-between items-center group">
+                PUBLISH NARRATIVE
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+            <p class="mt-4 text-[10px] text-secondary text-center font-medium">Ready to ink the digital page?</p>
+        </div>
+    </div>
+</form>
 {% endblock %}

@@ -1,32 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Admin Dashboard</h1>
-    <a href="/admin/add">+ Add New Article</a>
+<header class="flex justify-between items-end mb-12">
+    <div>
+        <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary block mb-2">Management</span>
+        <h1 class="text-4xl font-black tracking-tighter text-primary">Dashboard</h1>
+    </div>
+    <a href="/admin/add" class="bg-primary text-white px-6 py-3 text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+        + Write New Post
+    </a>
+</header>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for article in articles %}
-            <tr>
-                <td>{{ article.title }}</td>
-                <td>
-                    <a href="/admin/edit/{{ article.id }}">Edit</a> |
+<div class="space-y-4">
+    {% for article in articles %}
+    <div class="border-2 border-primary p-6 bg-white flex justify-between items-center group hover:bg-surface-container-low transition-colors">
+        <div>
+            <h2 class="text-lg font-bold tracking-tight mb-1">{{ article.title }}</h2>
+            <p class="text-[10px] text-secondary uppercase font-bold tracking-widest">
+                ID: {{ article.id[:8] }}... | Last Saved: {{ article.updated_at.strftime('%Y-%m-%d') }}
+            </p>
+        </div>
+        
+        <div class="flex gap-6 items-center">
+            <a href="/admin/edit/{{ article.id }}" class="text-xs font-bold uppercase border-b-2 border-transparent hover:border-primary">Edit</a>
+            
+            <form action="/admin/delete/{{ article.id }}" method="post" onsubmit="return confirm('Archive this narrative permanently?')">
+                <button type="submit" class="text-xs font-bold uppercase text-red-600 hover:underline">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
 
-                    <form action="/admin/delete/{{ article.id }}" method="post" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Are you sure?')" style="color: red; background: none; border: none; cursor: pointer; padding: 0;">
-                            Delete
-                        </button>
-
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if not articles %}
+    <div class="border-2 border-dashed border-outline-variant p-20 text-center">
+        <p class="text-secondary italic">No articles found in storage.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
