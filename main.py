@@ -4,9 +4,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from services import BlogService
 from routers import admin
-
+from db import init_db
 
 app = FastAPI()
+init_db()
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates") # This tells FastAPI where your HTML files are
 service = BlogService()
