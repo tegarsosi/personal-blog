@@ -1,62 +1,45 @@
-import json
-from pathlib import Path
 from models import Article
 from datetime import datetime
+from sqlmodel import Session, select
+from db import engine
 
 class BlogService:
-    def __init__(self, storage_dir: str = "storage"):
-        self.storage_path = Path(storage_dir)
-        # Ensure the directory exists immediately
-        self.storage_path.mkdir(exist_ok=True)
-
     def create_article(self, title: str, content: str) -> Article:
         article = Article(title=title, content=content)
-        file_path = self.storage_path / f"{article.id}.json"
-
-        with open(file_path, "w") as f:
-            f.write(article.model_dump_json())
-
+        with Session(engine) as session:
+            session.add(article)        # stage the insert
+            session.commit()            # actually write it
+            session.refresh(article)    # reload it from the DB
         return article
 
     def edit_article(self, article_id: str, title: str, content: str) -> Article | None:
-        file_path = self.storage_path / f"{article_id}.json"
+        with Session(engine) as session:
+            article = session.get(Article, article_id)
+            if article is None:
+                return None
 
-        if not file_path.exists():
-            return None
+            article.title = title
+            article.content = content
+            article.updated_at = datetime.now()
 
-        # Load the old data so we keep the original ID and timestamp
-        with open(file_path, "r") as f:
-            article = Article.model_validate_json(f.read())
-
-        # Update the fields witht he new data from the form
-        article.title = title
-        article.content = content
-        article.updated_at = datetime.now() # refresh timestamp
-
-        with open(file_path, "w") as f:
-            f.write(article.model_dump_json())
-
-        return article
+            session.add(article)
+            session.commit()
+            session.refresh(article)
+            
+            return article
     
     def delete_article(self, article_id: str) -> None:
-        file_path = self.storage_path / f"{article_id}.json"
-        if file_path.exists():
-            file_path.unlink() # This deletes the file
+        with Session(engine) as session:
+            article = session.get(Article, article_id)
+            if article is not None:
+                session.delete(article)
+                session.commit()
 
     def get_all_articles(self) -> list[Article]:
-        articles = []
-        for file in self.storage_path.glob("*.json"):
-            with open(file, "r") as f:
-                articles.append(Article.model_validate_json(f.read()))
-
-        # Sort by date: Latest first
-        articles.sort(key=lambda x: x.updated_at, reverse=True)
-        return articles
+        with Session(engine) as session:
+            statement = select(Article).order_by(Article.updated_at.desc())
+            return list(session.exec(statement).all())
 
     def get_article_by_id(self, article_id: str) -> Article | None:
-        file_path = self.storage_path / f"{article_id}.json"
-        if not file_path.exists():
-            return None
-
-        with open(file_path, "r") as f:
-            return Article.model_validate_json(f.read())
+        with Session(engine) as session:
+            return session.get(Article, article_id)

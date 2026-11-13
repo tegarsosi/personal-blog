@@ -1,9 +1,9 @@
 from uuid import uuid4
 from datetime import datetime
-from pydantic import BaseModel, Field
+from sqlmodel import SQLModel, Field
 
-class Article(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid4()))
+class Article(SQLModel, table=True):
+    id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
     title: str
     content: str
     created_at: datetime = Field(default_factory=datetime.now)
