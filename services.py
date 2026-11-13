@@ -1,5 +1,5 @@
 from models import Article
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlmodel import Session, select
 from db import engine
 
@@ -20,7 +20,7 @@ class BlogService:
 
             article.title = title
             article.content = content
-            article.updated_at = datetime.now()
+            article.updated_at = datetime.now(timezone.utc)
 
             session.add(article)
             session.commit()
