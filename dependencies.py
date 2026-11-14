@@ -1,31 +1,26 @@
 import os
 from dotenv import load_dotenv
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import Depends, HTTPException, Request, status
 import secrets
 
 load_dotenv()
 
-security = HTTPBasic()
-
-# Hardcode credentials for now
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    # Basic safety check to ensure .env variables actually loaded
-    if not ADMIN_USERNAME or not ADMIN_PASSWORD:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Server security misconfigured",
-        )
-    correct_username = secrets.compare_digest(credentials.username, ADMIN_USERNAME)
-    correct_password = secrets.compare_digest(credentials.password, ADMIN_PASSWORD)
 
-    if not (correct_username and correct_password):
+def check_credentials(username: str, password: str) -> bool:
+    if not ADMIN_USERNAME or not ADMIN_PASSWORD:
+        return False
+    correct_user = secrets.compare_digest(username, ADMIN_USERNAME)
+    correct_pass = secrets.compare_digest(password, ADMIN_PASSWORD)
+    return correct_user and correct_pass
+
+def require_login(request: Request) -> str:
+    user = request.session.get("user")
+    if not user:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorect username or password",
-            headers={"WWW-Authenticate": "Basic"},
+            status_code=status.HTTP_303_SEE_OTHER,
+            headers={"Location": "/login"},
         )
-    return credentials.username
+    return user

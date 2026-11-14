@@ -2,20 +2,20 @@ from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from dependencies import get_current_username
+from dependencies import require_login
 from services import BlogService
 
 # Create the router
 # Add 'dependencies' here to protect EVERY route in this file
 router = APIRouter(
     prefix="/admin",
-    dependencies=[Depends(get_current_username)]
+    dependencies=[Depends(require_login)]
 )
 
 templates = Jinja2Templates(directory="templates") # This tells FastAPI where my HTML files are
 service = BlogService()
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse, dependencies=[Depends(require_login)])
 def admin_dashboard(request: Request):
     articles = service.get_all_articles()
     return templates.TemplateResponse(
@@ -24,7 +24,7 @@ def admin_dashboard(request: Request):
         context={"articles": articles}
     )
 
-@router.get("/add", response_class=HTMLResponse)
+@router.get("/add", response_class=HTMLResponse, dependencies=[Depends(require_login)])
 def add_article_page(request: Request):
     return templates.TemplateResponse(
         request=request,
@@ -42,7 +42,7 @@ def handle_delete_article(article_id: str):
     service.delete_article(article_id=article_id)
     return RedirectResponse(url="/admin", status_code=303)
 
-@router.get("/edit/{article_id}", response_class=HTMLResponse)
+@router.get("/edit/{article_id}", response_class=HTMLResponse, dependencies=[Depends(require_login)])
 def edit_article(request: Request, article_id: str):
     article = service.get_article_by_id(article_id)
     return templates.TemplateResponse(

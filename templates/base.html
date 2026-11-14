@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Tegar's Portfolio | The Polished Ink</title>
+    <title>Tegar's Journal | The Polished Ink</title>
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -35,10 +35,15 @@
 <body class="bg-background text-primary font-body antialiased scribble-texture">
     <nav class="border-b-2 border-primary px-8 py-6 mb-12 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="/" class="text-xl font-black tracking-tighter uppercase">Ink Portfolio</a>
+            <a href="/" class="text-xl font-black tracking-tighter uppercase">Ink Journal</a>
             <div class="space-x-8 text-xs font-bold uppercase tracking-widest">
                 <a href="/" class="hover:underline">Home</a>
-                <a href="/admin" class="px-4 py-2 border-2 border-primary hover:bg-primary hover:text-white transition-colors">Admin</a>
+                {% if request.session.get("user") %}
+                    <a href="/admin" class="hover:underline">Admin</a>
+                    <form method="post" action="/logout" class="inline">
+                        <button type="submit" class="font-bold uppercase tracking-widest hover:underline">Log out</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </nav>
