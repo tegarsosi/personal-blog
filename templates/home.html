@@ -2,8 +2,8 @@
 
 {% block content %}
 <header class="mb-16">
-    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary mb-2 block">The Collection</span>
-    <h1 class="text-5xl font-extrabold tracking-tighter text-primary">Latest Articles</h1>
+    <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary mb-2 block">Hi {{ request.session.get("user") }}</span>
+    <h1 class="text-xl font-bold tracking-tighter text-primary">Your Journal Entries</h1>
 </header>
 
 <div class="space-y-20">
