@@ -1,19 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="post" action="/login">
-    <h1>Log in</h1>
+<section class="min-h-[60vh] flex items-center justify-center">
+    <div class="w-full max-w-md">
+        <header class="mb-10 text-center">
+            <span class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary mb-2">
+                <span class="material-symbols-outlined text-sm" aria-hidden="true">stylus_fountain_pen</span>
+                Private Journal
+            </span>
+            <h1 class="text-4xl font-black tracking-tighter text-primary">Welcome Back</h1>
+        </header>
+        <form method="post" action="/login" class="bg-white border-2 border-primary p-8 space-y-8 shadow-[8px_8px_0_0_#000]">
 
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
+            {% if error %}
+                <div role="alert" class="border-2 border-primary bg-surface-container-low px-4 py-3 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-base" aria-hidden="true">error</span>
+                    <p class="text-xs font-bold uppercase tracking-widest">{{ error }}</p>
+                </div>
+            {% endif %}
 
-    <label for="username">Username</label>
-    <input id="username" name="username" type="text" autocomplete="username" required>
-
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" autocomplete="current-password" required>
-
-    <button type="submit">Log in</button>
-</form>
-{% endblock%}
+            <div class="space-y-3">
+                <label for="username" class="block text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">
+                    Username
+                </label>
+                <input id="username" name="username" type="text" autocomplete="username" autofocus required class="w-full bg-white border-2 border-primary p-4 font-bold tracking-tight rounded-none focus:bg-surface-container-low focus:border-primary focus:ring-0 focus:outline-none transition-colors">
+            </div>
+            <div class="space-y-3">
+                <label for="password" class="block text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">
+                    Password
+                </label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full bg-white border-2 border-primary p-4 font-bold tracking-tight rounded-none focus:bg-surface-container-low focus:border-primary focus:ring-0 focus:outline-none transition-colors">
+            </div>
+            <button type="submit" class="w-full bg-primary text-white py-5 px-8 font-bold tracking-tighter text-lg hover:opacity-85 transition-opacity flex justify-between items-center group">
+                LOG IN
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" aria-hidden="true">arrow_forward</span>
+            </button>
+        </form>
+        <p class="mt-8 text-[10px] text-secondary text-center font-medium uppercase tracking-widest">
+            Entries are visible to the author only.
+        </p>
+    </div>
+</section>
+{% endblock %}
